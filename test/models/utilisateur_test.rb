@@ -5,8 +5,11 @@ class UtilisateurTest < ActiveSupport::TestCase
   #   assert true
   # end
 
+
+
   def setup
-    @utilisateur = Utilisateur.new(nom: "Exemple Utilisateur", email: "utilisateur@exemple.com")
+    @utilisateur = Utilisateur.new(nom: "Exemple Utilisateur", email: "utilisateur@exemple.com",
+      password: "exemple", password_confirmation: "exemple")
   end
 
   test "should be valid" do
@@ -53,7 +56,7 @@ class UtilisateurTest < ActiveSupport::TestCase
     end
   end
 
-  test "email addresses should be unique" do
+  test "email adresses should be unique" do
     utilisateur_duplique = @utilisateur.dup
     utilisateur_duplique.email = @utilisateur.email.upcase
     @utilisateur.save
@@ -61,8 +64,15 @@ class UtilisateurTest < ActiveSupport::TestCase
   end
 
 
+  test "password should be present" do
+    @utilisateur.password = @utilisateur.password_confirmation = " " * 6
+    assert_not @utilisateur.valid?
+  end 
 
-
+  test "password should have a minimum lenght" do
+    @utilisateur.password = @utilisateur.password_confirmation = "a" * 5
+    assert_not @utilisateur.valid?
+  end
 end
 
 
